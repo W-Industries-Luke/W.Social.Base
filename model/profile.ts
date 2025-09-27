@@ -1,4 +1,6 @@
-export interface Profile {
+import { CreationInfo } from './base/CreationInfo';
+
+export interface Profile extends CreationInfo {
   ProfileKey: string; // Guid
   ProfileId: number; // long (PK)
   ScreenName: string;

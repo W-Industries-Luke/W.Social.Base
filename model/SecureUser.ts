@@ -1,6 +1,7 @@
-import { Visibility } from './Visibility';
+import { Visibility } from '../enum/Visibility';
+import { CreationInfo } from './base/CreationInfo';
 
-export interface SecureUser {
+export interface SecureUser extends CreationInfo {
   Email: string;
   Visibility: Visibility;
   MessagingRuleId: number;
