@@ -301,6 +301,22 @@ FakesAssemblies/
 .ntvs_analysis.dat
 node_modules/
 
+# Angular specific
+/dist
+/tmp
+/out-tsc
+/bazel-out
+npm-debug.log
+yarn-error.log
+
+# Build artifacts
+*.tgz
+/coverage
+/nyc_output
+
+# Jest coverage
+/coverage
+
 # Visual Studio 6 build log
 *.plg
 
