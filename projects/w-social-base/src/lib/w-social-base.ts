@@ -1,20 +1,2 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-import { MaterialModule } from './material.module';
-
-@NgModule({
-  declarations: [],
-  imports: [
-    CommonModule,
-    HttpClientModule,
-    MaterialModule
-  ],
-  exports: [
-    MaterialModule
-  ],
-  providers: []
-})
-export class WSocialBaseModule { }
-
-export { WSocialBaseModule as WSocialBase };
+// This is a standalone library - no pre-configured module
+// Import individual services and components as needed in your application

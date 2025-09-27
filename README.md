@@ -1,14 +1,16 @@
 # W.Social.Base
 
-Angular core library for social media features with authentication and real-time messaging capabilities.
+Angular standalone library for social media features with authentication and real-time messaging capabilities.
+
+This is a **standalone library** - import only the services and components you need without any pre-configured modules.
 
 ## Features
 
 - **Authentication Service**: Secure authentication with JWT token support
 - **Real-time Messaging**: SignalR-based messaging system for real-time communication
 - **Configuration Management**: Centralized configuration service for API routes
-- **Angular Material**: Pre-configured Material Design components
 - **Jest Testing**: Unit testing setup with Jest testing framework
+- **Standalone Design**: No bundled modules - import individual services as needed
 
 ## Installation
 
@@ -18,15 +20,36 @@ npm install w-social-base
 
 ## Usage
 
-### Importing the Module
+### Importing Individual Services
+
+This library follows a standalone approach. Import only the services you need:
 
 ```typescript
-import { WSocialBaseModule } from 'w-social-base';
+import { AuthService, LoginRequest } from 'w-social-base';
+import { MsgService, Message } from 'w-social-base';
+import { ConfigService } from 'w-social-base';
+```
+
+### Module Configuration
+
+Configure your app module with the dependencies you need:
+
+```typescript
+import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
+import { AuthService, MsgService, ConfigService } from 'w-social-base';
 
 @NgModule({
   imports: [
-    WSocialBaseModule,
-    // ... other modules
+    HttpClientModule, // Required for AuthService
+    // Add any Angular Material modules you need
+    // Add any other dependencies
+  ],
+  providers: [
+    AuthService,
+    MsgService,
+    ConfigService,
+    // Configure other providers as needed
   ],
   // ...
 })
@@ -169,11 +192,18 @@ npm run test:coverage
 
 ## Dependencies
 
+### Required
 - Angular 20+ (latest version)
-- Angular Material
-- Microsoft SignalR Client
 - RxJS
 - Zone.js
+
+### Optional (based on services used)
+- `@angular/common/http` - Required if using AuthService
+- `@microsoft/signalr` - Required if using MsgService
+- Angular Material modules - Add individually as needed for your UI
+
+### Development
+- Jest (for testing)
 
 ## License
 
