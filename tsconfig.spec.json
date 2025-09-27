@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/spec",
+    "module": "commonjs",
+    "target": "es2015",
+    "types": [
+      "jest",
+      "node"
+    ]
+  },
+  "include": [
+    "projects/w-social-base/src/**/*.spec.ts",
+    "projects/w-social-base/src/**/*.d.ts"
+  ]
+}
