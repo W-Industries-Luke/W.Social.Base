@@ -1,0 +1,23 @@
+<div class="text-area-container">
+  <textarea
+    class="text-area"
+    [class.near-limit]="isNearLimit"
+    [class.at-limit]="isAtLimit"
+    [placeholder]="placeholder"
+    [disabled]="disabled"
+    [value]="value"
+    (input)="onInput($event)"
+    (blur)="onBlur()"
+    rows="4"
+  ></textarea>
+  
+  <div class="character-counter">
+    <span 
+      class="counter-text"
+      [class.near-limit]="isNearLimit"
+      [class.at-limit]="isAtLimit"
+    >
+      {{ characterCount }} / {{ maxLength }}
+    </span>
+  </div>
+</div>
