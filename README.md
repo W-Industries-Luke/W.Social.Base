@@ -7,6 +7,7 @@ This is a **standalone library** - import only the services and components you n
 ## Features
 
 - **Authentication Service**: Secure authentication with JWT token support
+- **Authentication UI Components**: Material Design dialog components for login and signup
 - **Real-time Messaging**: SignalR-based messaging system for real-time communication
 - **Configuration Management**: Centralized configuration service for API routes
 - **Jest Testing**: Unit testing setup with Jest testing framework
@@ -28,6 +29,7 @@ This library follows a standalone approach. Import only the services you need:
 import { AuthService, LoginRequest } from 'w-social-base';
 import { MsgService, Message } from 'w-social-base';
 import { ConfigService } from 'w-social-base';
+import { DialogService, LoginDialogComponent, SignUpDialogComponent } from 'w-social-base';
 ```
 
 ### Module Configuration
@@ -77,6 +79,34 @@ login() {
       console.error('Login failed:', error);
     }
   });
+}
+```
+
+### Dialog Service (UI Components)
+
+```typescript
+import { DialogService } from 'w-social-base';
+
+constructor(private dialogService: DialogService) {}
+
+openLogin() {
+  this.dialogService.openLoginDialog({ title: 'Welcome Back!' })
+    .subscribe((result) => {
+      if (result) {
+        console.log('Login successful:', result);
+        // Handle successful login
+      }
+    });
+}
+
+openSignUp() {
+  this.dialogService.openSignUpDialog({ title: 'Join Us!' })
+    .subscribe((result) => {
+      if (result?.success) {
+        console.log('Sign up successful:', result.data);
+        // Handle successful sign up
+      }
+    });
 }
 ```
 
@@ -169,6 +199,16 @@ The library includes a default configuration with the Heartland Auth API route:
 - `getApiRoute(routeName)` - Get specific API route
 - `getHeartlandAuthRoute()` - Get Heartland Auth route
 - `getAllApiRoutes()` - Get all configured API routes
+
+### DialogService
+- `openLoginDialog(data?)` - Open login dialog with optional configuration
+- `openSignUpDialog(data?)` - Open sign-up dialog with optional configuration
+
+### UI Components
+- **LoginDialogComponent** - Material Design login form dialog
+- **SignUpDialogComponent** - Material Design sign-up form dialog
+
+See [DIALOG_COMPONENTS.md](DIALOG_COMPONENTS.md) for detailed usage examples.
 
 ## Development
 

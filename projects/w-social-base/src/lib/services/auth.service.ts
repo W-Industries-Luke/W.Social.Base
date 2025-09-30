@@ -20,6 +20,13 @@ export interface LoginResponse {
   user: AuthUser;
 }
 
+export interface SignUpRequest {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })

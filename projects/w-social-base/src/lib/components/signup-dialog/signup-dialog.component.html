@@ -1,0 +1,109 @@
+<h2 mat-dialog-title>{{ data?.title || 'Create Account' }}</h2>
+
+<form [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content class="signup-dialog-content">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Username</mat-label>
+      <input matInput 
+             formControlName="username" 
+             placeholder="Choose a username"
+             autocomplete="username">
+      <mat-error *ngIf="signUpForm.get('username')?.hasError('required')">
+        Username is required
+      </mat-error>
+      <mat-error *ngIf="signUpForm.get('username')?.hasError('minlength')">
+        Username must be at least 3 characters long
+      </mat-error>
+      <mat-error *ngIf="signUpForm.get('username')?.hasError('pattern')">
+        Username can only contain letters, numbers, and underscores
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput 
+             formControlName="email" 
+             placeholder="Enter your email address"
+             autocomplete="email">
+      <mat-error *ngIf="signUpForm.get('email')?.hasError('required')">
+        Email is required
+      </mat-error>
+      <mat-error *ngIf="signUpForm.get('email')?.hasError('email')">
+        Please enter a valid email address
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Password</mat-label>
+      <input matInput 
+             [type]="hidePassword ? 'password' : 'text'" 
+             formControlName="password"
+             placeholder="Create a password"
+             autocomplete="new-password">
+      <button mat-icon-button 
+              matSuffix 
+              type="button"
+              (click)="hidePassword = !hidePassword"
+              [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="hidePassword">
+        <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+      <mat-error *ngIf="signUpForm.get('password')?.hasError('required')">
+        Password is required
+      </mat-error>
+      <mat-error *ngIf="signUpForm.get('password')?.hasError('minlength')">
+        Password must be at least 8 characters long
+      </mat-error>
+      <mat-error *ngIf="signUpForm.get('password')?.hasError('pattern')">
+        Password must contain at least one uppercase letter, one lowercase letter, and one number
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Confirm Password</mat-label>
+      <input matInput 
+             [type]="hideConfirmPassword ? 'password' : 'text'" 
+             formControlName="confirmPassword"
+             placeholder="Confirm your password"
+             autocomplete="new-password">
+      <button mat-icon-button 
+              matSuffix 
+              type="button"
+              (click)="hideConfirmPassword = !hideConfirmPassword"
+              [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="hideConfirmPassword">
+        <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+      <mat-error *ngIf="signUpForm.get('confirmPassword')?.hasError('required')">
+        Please confirm your password
+      </mat-error>
+      <mat-error *ngIf="signUpForm.get('confirmPassword')?.hasError('passwordMismatch')">
+        Passwords do not match
+      </mat-error>
+    </mat-form-field>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-spinner diameter="30"></mat-spinner>
+      <span>Creating account...</span>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button 
+            type="button" 
+            (click)="onCancel()"
+            [disabled]="isLoading">
+      Cancel
+    </button>
+    <button mat-raised-button 
+            color="primary" 
+            type="submit"
+            [disabled]="signUpForm.invalid || isLoading">
+      {{ isLoading ? 'Creating Account...' : 'Create Account' }}
+    </button>
+  </mat-dialog-actions>
+</form>

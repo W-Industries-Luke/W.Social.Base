@@ -1,0 +1,35 @@
+.login-dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 300px;
+  max-width: 400px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.error-message {
+  color: #f44336;
+  font-size: 14px;
+  margin-top: 8px;
+  text-align: center;
+}
+
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.loading-container span {
+  font-size: 14px;
+  color: #666;
+}
+
+mat-dialog-actions {
+  margin-top: 16px;
+}
