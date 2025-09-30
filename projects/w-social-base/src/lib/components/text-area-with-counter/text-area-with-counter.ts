@@ -17,9 +17,19 @@ import { CommonModule } from '@angular/common';
   ]
 })
 export class TextAreaWithCounter implements ControlValueAccessor {
+  /** Placeholder text for the textarea */
   @Input() placeholder: string = '';
+  
+  /** Maximum number of characters allowed (default: 230) */
   @Input() maxLength: number = 230;
+  
+  /** Number of characters remaining when warning state should trigger (default: 20) */
+  @Input() warningThreshold: number = 20;
+  
+  /** Whether the textarea is disabled */
   @Input() disabled: boolean = false;
+  
+  /** Emitted when the text value changes */
   @Output() textChange = new EventEmitter<string>();
 
   value: string = '';
@@ -32,11 +42,11 @@ export class TextAreaWithCounter implements ControlValueAccessor {
   }
 
   get remainingCharacters(): number {
-    return this.maxLength - this.characterCount;
+    return Math.max(0, this.maxLength - this.characterCount);
   }
 
   get isNearLimit(): boolean {
-    return this.remainingCharacters <= 20;
+    return this.remainingCharacters <= this.warningThreshold && this.remainingCharacters > 0;
   }
 
   get isAtLimit(): boolean {
@@ -47,9 +57,10 @@ export class TextAreaWithCounter implements ControlValueAccessor {
     const target = event.target as HTMLTextAreaElement;
     let newValue = target.value;
     
-    // Enforce max length
-    if (newValue.length > this.maxLength) {
-      newValue = newValue.substring(0, this.maxLength);
+    // Enforce max length (ensure maxLength is positive)
+    const effectiveMaxLength = Math.max(1, this.maxLength);
+    if (newValue.length > effectiveMaxLength) {
+      newValue = newValue.substring(0, effectiveMaxLength);
       target.value = newValue;
     }
     
