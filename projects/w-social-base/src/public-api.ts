@@ -11,5 +11,8 @@ export * from './lib/services/config.service';
 // Models/Interfaces  
 export * from './lib/models/config.interface';
 
+// Directives
+export * from './lib/directives';
+
 // Configuration
 export * from './lib/config/app.config';
