@@ -8,6 +8,7 @@ This is a **standalone library** - import only the services and components you n
 
 - **Authentication Service**: Secure authentication with JWT token support
 - **Real-time Messaging**: SignalR-based messaging system for real-time communication
+- **Social Feed Components**: Ready-to-use components for displaying posts and feeds
 - **Configuration Management**: Centralized configuration service for API routes
 - **Jest Testing**: Unit testing setup with Jest testing framework
 - **Standalone Design**: No bundled modules - import individual services as needed
@@ -20,14 +21,15 @@ npm install w-social-base
 
 ## Usage
 
-### Importing Individual Services
+### Importing Individual Services and Components
 
-This library follows a standalone approach. Import only the services you need:
+This library follows a standalone approach. Import only the services and components you need:
 
 ```typescript
 import { AuthService, LoginRequest } from 'w-social-base';
 import { MsgService, Message } from 'w-social-base';
 import { ConfigService } from 'w-social-base';
+import { PostComponent, FeedComponent, Post } from 'w-social-base';
 ```
 
 ### Module Configuration
@@ -169,6 +171,121 @@ The library includes a default configuration with the Heartland Auth API route:
 - `getApiRoute(routeName)` - Get specific API route
 - `getHeartlandAuthRoute()` - Get Heartland Auth route
 - `getAllApiRoutes()` - Get all configured API routes
+
+## Available Components
+
+### PostComponent (`wsb-post`)
+
+A standalone component for displaying individual social media posts with like, repost, and comment functionality.
+
+**Inputs:**
+- `post: Post | null` - The post data to display
+
+**Outputs:**
+- `like: EventEmitter<string>` - Emitted when user likes a post (post ID)
+- `repost: EventEmitter<string>` - Emitted when user reposts (post ID)
+- `comment: EventEmitter<string>` - Emitted when user clicks comment (post ID)
+
+**Usage:**
+```typescript
+import { PostComponent, Post } from 'w-social-base';
+
+// In your component
+post: Post = {
+  id: '1',
+  authorId: 'user123',
+  authorName: 'John Doe',
+  content: 'Hello world!',
+  timestamp: new Date(),
+  likes: 5,
+  reposts: 2,
+  comments: 3
+};
+
+handleLike(postId: string) {
+  console.log('Liked post:', postId);
+}
+```
+
+```html
+<wsb-post
+  [post]="post"
+  (like)="handleLike($event)"
+  (repost)="handleRepost($event)"
+  (comment)="handleComment($event)">
+</wsb-post>
+```
+
+### FeedComponent (`wsb-feed`)
+
+A standalone component for displaying a list of posts with loading states and pagination support.
+
+**Inputs:**
+- `posts: Post[] | null` - Array of posts to display
+- `loading: boolean` - Shows loading spinner when true
+- `loadingMore: boolean` - Shows loading state for pagination
+- `hasMore: boolean` - Shows "Load More" button when true
+- `title?: string` - Optional feed title
+- `subtitle?: string` - Optional feed subtitle
+- `emptyMessage?: string` - Custom message for empty state
+
+**Outputs:**
+- `postLike: EventEmitter<string>` - Emitted when user likes any post
+- `postRepost: EventEmitter<string>` - Emitted when user reposts any post
+- `postComment: EventEmitter<string>` - Emitted when user clicks comment on any post
+- `loadMore: EventEmitter<void>` - Emitted when user clicks "Load More"
+
+**Usage:**
+```typescript
+import { FeedComponent, Post } from 'w-social-base';
+
+// In your component
+posts: Post[] = [/* your posts array */];
+loading = false;
+hasMore = true;
+
+handlePostInteraction(postId: string) {
+  console.log('Post interaction:', postId);
+}
+
+loadMorePosts() {
+  // Load more posts logic
+}
+```
+
+```html
+<wsb-feed
+  [posts]="posts"
+  [loading]="loading"
+  [hasMore]="hasMore"
+  [title]="'My Social Feed'"
+  [subtitle]="'Latest updates'"
+  (postLike)="handlePostInteraction($event)"
+  (postRepost)="handlePostInteraction($event)"
+  (postComment)="handlePostInteraction($event)"
+  (loadMore)="loadMorePosts()">
+</wsb-feed>
+```
+
+### Post Interface
+
+```typescript
+interface Post {
+  id: string;
+  authorId: string;
+  authorName: string;
+  authorProfilePic?: string;
+  content: string;
+  timestamp: Date;
+  likes: number;
+  reposts: number;
+  comments: number;
+  isLiked?: boolean;
+  isReposted?: boolean;
+  type?: 'text' | 'image' | 'video';
+  mediaUrl?: string;
+}
+```
 
 ## Development
 
