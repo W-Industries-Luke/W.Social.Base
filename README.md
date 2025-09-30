@@ -7,6 +7,8 @@ This is a **standalone library** - import only the services and components you n
 ## Features
 
 - **Authentication Service**: Secure authentication with JWT token support
+- **JWT Management**: Comprehensive JWT token handling with automatic refresh and validation
+- **HTTP Interceptor**: Automatic JWT token attachment and 401 error handling
 - **Real-time Messaging**: SignalR-based messaging system for real-time communication
 - **Configuration Management**: Centralized configuration service for API routes
 - **Jest Testing**: Unit testing setup with Jest testing framework
@@ -28,6 +30,7 @@ This library follows a standalone approach. Import only the services you need:
 import { AuthService, LoginRequest } from 'w-social-base';
 import { MsgService, Message } from 'w-social-base';
 import { ConfigService } from 'w-social-base';
+import { JwtService, JwtInterceptor } from 'w-social-base';
 ```
 
 ### Module Configuration
@@ -36,12 +39,12 @@ Configure your app module with the dependencies you need:
 
 ```typescript
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
-import { AuthService, MsgService, ConfigService } from 'w-social-base';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthService, MsgService, ConfigService, JwtService, JwtInterceptor } from 'w-social-base';
 
 @NgModule({
   imports: [
-    HttpClientModule, // Required for AuthService
+    HttpClientModule, // Required for AuthService and JwtInterceptor
     // Add any Angular Material modules you need
     // Add any other dependencies
   ],
@@ -49,6 +52,12 @@ import { AuthService, MsgService, ConfigService } from 'w-social-base';
     AuthService,
     MsgService,
     ConfigService,
+    JwtService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtInterceptor,
+      multi: true
+    },
     // Configure other providers as needed
   ],
   // ...
@@ -79,6 +88,64 @@ login() {
   });
 }
 ```
+
+### JWT Service
+
+The JWT service provides comprehensive JSON Web Token management including storage, validation, and decoding.
+
+```typescript
+import { JwtService } from 'w-social-base';
+
+constructor(private jwtService: JwtService) {
+  // Subscribe to token changes
+  this.jwtService.token$.subscribe(token => {
+    console.log('Token changed:', token);
+  });
+}
+
+// Store JWT token
+storeToken(token: string) {
+  this.jwtService.setToken(token);
+}
+
+// Check if user is authenticated
+checkAuth() {
+  if (this.jwtService.isAuthenticated()) {
+    console.log('User is authenticated');
+    console.log('User ID:', this.jwtService.getUserId());
+    console.log('Token expires:', this.jwtService.getTokenExpirationDate());
+  } else {
+    console.log('User is not authenticated');
+  }
+}
+
+// Handle logout
+logout() {
+  this.jwtService.removeToken();
+}
+```
+
+### JWT Interceptor
+
+The JWT interceptor automatically attaches JWT tokens to HTTP requests and handles token refresh on 401 errors.
+
+```typescript
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { JwtInterceptor } from 'w-social-base';
+
+// Add to your module providers
+{
+  provide: HTTP_INTERCEPTORS,
+  useClass: JwtInterceptor,
+  multi: true
+}
+```
+
+The interceptor will:
+- Automatically add `Authorization: Bearer <token>` header to requests
+- Skip authentication for login, register, and refresh routes
+- Automatically attempt token refresh on 401 responses
+- Remove invalid tokens and retry requests with new tokens
 
 ### Message Service (SignalR)
 
@@ -169,6 +236,24 @@ The library includes a default configuration with the Heartland Auth API route:
 - `getApiRoute(routeName)` - Get specific API route
 - `getHeartlandAuthRoute()` - Get Heartland Auth route
 - `getAllApiRoutes()` - Get all configured API routes
+
+### JwtService
+- `setToken(token)` - Store JWT token in localStorage
+- `getToken()` - Retrieve JWT token from storage
+- `removeToken()` - Remove JWT token from storage
+- `decodeToken(token?)` - Decode JWT token payload
+- `isTokenValid(token?)` - Check if token exists and is not expired
+- `isTokenExpired(token?)` - Check if token is expired
+- `getTokenExpirationDate(token?)` - Get token expiration date
+- `getUserId(token?)` - Get user ID from token
+- `isAuthenticated()` - Check if user has valid token
+- Observable stream: `token$` - Emits token changes
+
+### JwtInterceptor
+- Automatically adds Authorization header to HTTP requests
+- Handles token refresh on 401 unauthorized responses
+- Excludes login, register, and refresh routes from token attachment
+- Integrates with AuthService for token refresh functionality
 
 ## Development
 
