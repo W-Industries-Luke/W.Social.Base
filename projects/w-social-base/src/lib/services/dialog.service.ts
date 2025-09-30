@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
-import { LoginDialogComponent, LoginDialogData } from '../components/login-dialog.component';
-import { SignUpDialogComponent, SignUpDialogData } from '../components/signup-dialog.component';
+import { LoginDialogComponent, LoginDialogData } from '../components/login-dialog/login-dialog.component';
+import { SignUpDialogComponent, SignUpDialogData } from '../components/signup-dialog/signup-dialog.component';
 import { LoginResponse } from './auth.service';
 
 @Injectable({
